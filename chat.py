@@ -53,7 +53,7 @@ Pergunta:
 Resposta (por Jasmine):
 """
 
-prompt = PromptTemplate(template=template, input_variables=["context", "question", "data"])
+prompt = PromptTemplate(template=template, input_variables=["context", "question"])
 llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 parser = StrOutputParser()
 
@@ -73,7 +73,7 @@ if enviar and pergunta:
     # Exibir resposta com streaming
     resposta_final = ""
     try:
-        for chunk in chain.stream({"context": contexto, "question": pergunta, "data": data}):
+        for chunk in chain.stream({"context": contexto, "question": pergunta}):
             resposta_final += chunk
             #print(resposta_final)
             resposta_area.markdown(f"🪪 {resposta_final}▌")
