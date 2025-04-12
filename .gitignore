@@ -178,3 +178,4 @@ langchain_env
 /langchain_env
 
 langchain_env/
+memory.db
