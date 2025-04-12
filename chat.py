@@ -6,7 +6,6 @@ from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 import streamlit as st
 
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,14 +20,13 @@ st.markdown("Faça uma pergunta com base no conteúdo do PDF. Jasmine te respond
 # Carrega e indexa o PDF apenas uma vez por sessão
 @st.cache_resource(show_spinner="Carregando e indexando o PDF...")
 def carregar_vectorstore():
-    caminho_pdf = "documento_informacoes.pdf"
-
+    caminho_pdf = "servico.pdf"
     # Lendo arquivo pdf
     loader = PyPDFLoader(caminho_pdf)
-    pages = [page for page in loader.load()] 
+    pages = [page for page in loader.load()]
 
     # splitando os documentos 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50, separators=["\n"], is_separator_regex=False)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50, separators=["\n"], is_separator_regex=False)
     documents =  splitter.split_documents(pages)
 
     # indexando vectorstore e fazendo o embedding
@@ -37,12 +35,13 @@ def carregar_vectorstore():
 
 
 vectorstore = carregar_vectorstore()
-retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 
 # Definição do template
 template = """
-Você é Jasmine,  se indetifique se perguntarem seu nome, uma despachante experiente, clara e eficiente. Responda à pergunta do usuário com base apenas nas informações fornecidas no contexto abaixo. 
-Se a resposta não estiver presente a base de informaçao da Recife placas, diga educadamente que não é possível responder com os dados disponíveis, examine bem o contexto e responda.
+Você é Jasmine, se identifique sempre, uma despachante experiente, clara e eficiente. Responda à pergunta do usuário com base apenas nas informações fornecidas no contexto abaixo. 
+Considere que todas as informações como telefone, endereço ou nome presentes no documento são da empresa Recife Placas, salvo indicação contrária.
+Se a resposta não estiver presente no contexto de informação, diga educadamente que não é possível responder com os dados disponíveis.
 
 Contexto:
 {context}
@@ -50,7 +49,7 @@ Contexto:
 Pergunta:
 {question}
 
-Resposta (por Jasmine):
+Responda (por Jasmine como se fosse realmente uma mulher falando):
 """
 
 prompt = PromptTemplate(template=template, input_variables=["context", "question"])
@@ -69,7 +68,6 @@ if enviar and pergunta:
 
     st.markdown("### ✨ Resposta da Jasmine:")
     resposta_area = st.empty()
-
     # Exibir resposta com streaming
     resposta_final = ""
     try:
@@ -79,6 +77,7 @@ if enviar and pergunta:
             resposta_area.markdown(f"🪪 {resposta_final}▌")
 
         resposta_area.markdown(f"🪪 {resposta_final}")  # Remove o cursor final
+        
     except Exception as e:
         st.error(f"Erro ao gerar resposta: {e}")
 
