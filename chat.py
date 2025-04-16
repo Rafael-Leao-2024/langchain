@@ -28,7 +28,7 @@ documentos_pages = [page for page in lista_docs]
 def carregar_vectorstore():    
 
     # splitando os documentos 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50, length_function=len, separators=["\n\n"], is_separator_regex=False)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50, length_function=len, separators=["\n"], is_separator_regex=False)
     documents_splits =  splitter.split_documents(documentos_pages)
 
     # indexando vectorstore e fazendo o embedding
@@ -37,7 +37,7 @@ def carregar_vectorstore():
 
 
 vectorstore = carregar_vectorstore()
-retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
 # Definição do template
 template = """
@@ -63,7 +63,7 @@ Responda à pergunta do usuário com base **exclusivamente** nas informações f
 """
 
 prompt = PromptTemplate(template=template, input_variables=["context", "question"])
-llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o")
 parser = StrOutputParser()
 
 chain = prompt | llm | parser
@@ -75,13 +75,13 @@ with st.form("form_pergunta"):
 if enviar and pergunta:
     contextos = retriever.invoke(pergunta)
     contexto = "\n".join((f"Source: {ctx.metadata}\n\n" f"Content: {ctx.page_content}") for ctx in contextos)
-    print(contexto)
+    
     st.markdown("### ✨ Resposta da Jasmine:")
     resposta_area = st.empty()
     # Exibir resposta com streaming
     resposta_final = ""
     try:
-        for chunk in chain.stream({"context": contexto.lower(), "question": pergunta}):
+        for chunk in chain.stream({"context": contexto, "question": pergunta}):
             resposta_final += chunk
             #print(resposta_final)
             resposta_area.markdown(f"🪪 {resposta_final}▌")
