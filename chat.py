@@ -17,7 +17,7 @@ st.title("📄 Jasmine - Despachante Inteligente")
 st.markdown("Faça uma pergunta com base no conteúdo do PDF. Jasmine te responde na hora!")
 
 
-caminho_pdf = "servico.pdf"
+caminho_pdf = "servicos_de_veiculos.pdf"
 # Lendo arquivo pdf
 loader = PyPDFLoader(caminho_pdf)
 lista_docs = loader.load()
