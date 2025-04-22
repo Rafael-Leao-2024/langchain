@@ -4,7 +4,9 @@ from langchain_openai import ChatOpenAI
 import requests
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import PromptTemplate
+from dotenv import load_dotenv
 
+load_dotenv()
 
 @tool
 def traducao(str):

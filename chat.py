@@ -17,8 +17,8 @@ st.title("📄 Jasmine - Despachante Inteligente")
 st.markdown("Faça uma pergunta com base no conteúdo do PDF. Jasmine te responde na hora!")
 
 
-caminho_pdf = "servicos_de_veiculos.pdf"
 # Lendo arquivo pdf
+caminho_pdf = "servicos_de_veiculos.pdf"
 loader = PyPDFLoader(caminho_pdf)
 lista_docs = loader.load()
 documentos_pages = [page for page in lista_docs]
@@ -63,10 +63,10 @@ Responda à pergunta do usuário com base **exclusivamente** nas informações f
 """
 
 prompt = PromptTemplate(template=template, input_variables=["context", "question"])
-llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o")
+llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o") #ler automaticamente a  chave API
 parser = StrOutputParser()
 
-chain = prompt | llm | parser
+chain = prompt | llm | parser # cadeia
 
 with st.form("form_pergunta"):
     pergunta = st.text_input("Digite sua pergunta sobre o documento:", placeholder="Ex: Qual o país do endereço desse recibo?")
