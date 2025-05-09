@@ -60,7 +60,7 @@ conv_chain = RunnableWithMessageHistory(
 # Lógica do chat
 if input_prompt := st.chat_input("Digite sua mensagem..."):
     # Adiciona mensagem do usuário ao histórico
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"role": "user", "content": input_prompt})
     with st.chat_message("user"):
         st.markdown(input_prompt)
     
@@ -70,7 +70,7 @@ if input_prompt := st.chat_input("Digite sua mensagem..."):
         full_response = ""
         
         # Usa session_id baseado no usuário do Streamlit para persistência
-        session_id = str(hash(st.experimental_user.__str__()))
+        session_id = str(hash(st.user.__str__()))
         
         # Invoca a cadeia de conversação
         response = conv_chain.invoke(
