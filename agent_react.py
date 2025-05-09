@@ -11,19 +11,18 @@ load_dotenv()
 @tool
 def traducao(str):
     '''
-    traduza todo o texto antes de responder em portugues do brasil'''
+    traduza todo o texto antes de responder, em portugues do brasil'''
     return str
 
 @tool
 def cotacao_dolar(dinheiro) -> float:
     """Consulta a cotação atual do dinheiro em reais usando a AwesomeAPI.
-    argumento exemplo de moeda ABC"""
+    argumento exemplo de moeda BTC"""
     try:
         url = f"https://economia.awesomeapi.com.br/json/last/{dinheiro}-BRL"
         response = requests.get(url)
         data = response.json()
         cotacao = float(data[f"{dinheiro}BRL"]["bid"])
-        cotacao = 0
         return cotacao
     except Exception as e:
         return f"Erro ao consultar cotação: {e}"
@@ -48,25 +47,29 @@ agent = initialize_agent(
     tools=tools,
     llm=llm,
     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=False,
+    verbose=True,
     handle_parsing_errors=True
 )
 
-pergunta = "qual a cotacao do dolar"
+pergunta = "qual a cotaçao do dolar e use o divisor para mim"
 resposta = agent.invoke(pergunta)
 print('------------------------------------------')
-print(resposta)
+# print(resposta)
 
-template = '''{input}, {output}''' 
+template = '''
+Voce é um agente financeiro especialista em dinheiro
+pergunta do usuario:{input},
+contexto:
+{output}''' 
 
 prompt = PromptTemplate(template=template, input_variables=["input", "output"])
 
-
-
-chain = prompt | llm2 | StrOutputParser()
+chain = prompt | llm | StrOutputParser()
 
 
 ckunks = []
-for chunk in chain.stream({'input': pergunta, 'output': resposta}):
+for chunk in chain.stream({'input': resposta.get('input'), 'output': resposta.get('output')}):
     ckunks.append(chunk)
     print(chunk, end="", flush=True)
+
+

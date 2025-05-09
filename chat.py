@@ -28,7 +28,7 @@ documentos_pages = [page for page in lista_docs]
 def carregar_vectorstore():    
 
     # splitando os documentos 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50, length_function=len, separators=["\n"], is_separator_regex=False)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=50, length_function=len, separators=["\n", "\n\n"], is_separator_regex=False)
     documents_splits =  splitter.split_documents(documentos_pages)
 
     # indexando vectorstore e fazendo o embedding

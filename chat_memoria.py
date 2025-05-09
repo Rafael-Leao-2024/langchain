@@ -36,8 +36,8 @@ conv_chain = RunnableWithMessageHistory(llm_chain,
                                         history_messages_key="history")
 
 while True:
-    inpute = input('voce: ')
-    if 'Q' in inpute:
+    entrada = input('voce: ')
+    if 'sair' in entrada.lower():
         break
     #test out the chain  
-    print(conv_chain.invoke(input={"human_input": inpute}, config={'configurable': { 'session_id': "ID_USUARIO"}}))
+    print(conv_chain.invoke(input={"human_input": entrada}, config={'configurable': { 'session_id': "ID_USUARIO"}}))
