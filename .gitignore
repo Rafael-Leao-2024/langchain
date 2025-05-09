@@ -179,3 +179,4 @@ langchain_env
 
 langchain_env/
 memory.db
+memory.sqbpro
