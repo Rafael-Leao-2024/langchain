@@ -51,20 +51,20 @@ agent = initialize_agent(
     handle_parsing_errors=True
 )
 
-pergunta = "qual a cotaçao do dolar e use o divisor para mim"
+pergunta = "quero a cotaçao de 4 moedas pode ser qualquer uma"
 resposta = agent.invoke(pergunta)
 print('------------------------------------------')
 # print(resposta)
 
 template = '''
-Voce é um agente financeiro especialista em dinheiro
+Voce é um agente financeiro especialista em cotaçoes
+contexto: {output}
 pergunta do usuario:{input},
-contexto:
-{output}''' 
+''' 
 
 prompt = PromptTemplate(template=template, input_variables=["input", "output"])
 
-chain = prompt | llm | StrOutputParser()
+chain = prompt | llm2 | StrOutputParser()
 
 
 ckunks = []

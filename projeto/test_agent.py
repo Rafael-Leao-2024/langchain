@@ -61,11 +61,11 @@ def inicializar_agente():
 # Template para formatação da resposta
 template = '''
 Você é um agente financeiro especialista em dinheiro.
-
-Pergunta do usuário: {input}
-
+s
 Contexto:
-{output}'''
+{output}
+
+Pergunta do usuário: {input}'''
 
 prompt = PromptTemplate(template=template, input_variables=["input", "output"])
 chain = prompt | ChatOpenAI(temperature=0.1, model_name="gpt-4o") | StrOutputParser()

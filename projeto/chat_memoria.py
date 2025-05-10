@@ -9,16 +9,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-prompt = ChatPromptTemplate.from_messages([("system", "Atue como um assistente de IA útil"),
+prompt = ChatPromptTemplate.from_messages([("system", "Atue como um assistente de IA útil so para questao de finança"),
                                            MessagesPlaceholder(variable_name='history'),
                                             ("human", "{human_input}")])
 
 # persistir todas as conversas baseadas em sessão do usuário em um banco de dados SQL  
 def get_session_history_db(session_id):  
-    return SQLChatMessageHistory(session_id, connection="sqlite:///memory.db") 
+    return SQLChatMessageHistory(session_id, connection="sqlite:///../memory.db") 
 
 # crie uma função de janela de buffer de memória para retornar as últimas K conversas  
-def memory_window(messages, k=10):  
+def memory_window(messages, k=20):  
     return messages[-(k+1):]
 
 # crie uma cadeia LLM simples que usa apenas as últimas K conversas  
@@ -40,4 +40,4 @@ while True:
     if 'sair' in entrada.lower():
         break
     #test out the chain  
-    print(conv_chain.invoke(input={"human_input": entrada}, config={'configurable': { 'session_id': "ID_USUARIO"}}))
+    print(conv_chain.invoke(input={"human_input": entrada}, config={'configurable': { 'session_id': "1"}}))

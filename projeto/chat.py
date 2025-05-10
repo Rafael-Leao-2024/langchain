@@ -18,7 +18,7 @@ st.markdown("Faça uma pergunta com base no conteúdo do PDF. Jasmine te respond
 
 
 # Lendo arquivo pdf
-caminho_pdf = "servicos_de_veiculos.pdf"
+caminho_pdf = "pdf_file/servicos_de_veiculos.pdf"
 loader = PyPDFLoader(caminho_pdf)
 lista_docs = loader.load()
 documentos_pages = [page for page in lista_docs]
@@ -89,3 +89,5 @@ if enviar and pergunta:
 
     except Exception as e:
         st.error(f"Erro ao gerar resposta: {e}")
+
+print(f"🪪 {resposta_final}")
