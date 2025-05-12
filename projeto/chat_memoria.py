@@ -30,10 +30,12 @@ llm_chain = (RunnablePassthrough.assign(history=lambda x: memory_window(x["histo
              | StrOutputParser()) 
 
 # crie uma cadeia de conversação para lidar com o histórico baseado em sessão.  
-conv_chain = RunnableWithMessageHistory(llm_chain,
-                                        get_session_history_db,
-                                        input_messages_key="human_input",
-                                        history_messages_key="history")
+conv_chain = RunnableWithMessageHistory(
+    llm_chain,
+    get_session_history_db,
+    input_messages_key="human_input",
+    history_messages_key="history"
+    )
 
 while True:
     entrada = input('voce: ')

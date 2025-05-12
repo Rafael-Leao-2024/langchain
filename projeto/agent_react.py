@@ -5,17 +5,31 @@ import requests
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
+from langchain_core.tools import tool as ferramenta
 
 load_dotenv()
+
+@ferramenta
+def vale_apena(cotacao):
+    '''
+    recebi como entrada a cotacao vinda da cotaçao_moeda
+    argumento float
+    '''
+    if float(cotacao) >= 5.7283:
+        return f"Nao vale a pena ta caro com valor de {cotacao}"
+    else:
+        return f"Vale a Pena cotacao {cotacao}"
 
 @tool
 def traducao(str):
     '''
     traduza todo o texto antes de responder, em portugues do brasil'''
+    
     return str
 
+
 @tool
-def cotacao_dolar(dinheiro) -> float:
+def cotaçao_moeda(dinheiro) -> float:
     """Consulta a cotação atual do dinheiro em reais usando a AwesomeAPI.
     argumento exemplo de moeda BTC"""
     try:
@@ -36,7 +50,7 @@ def calcular_divisor(valor_dinheiro: float) -> float:
     return float(valor_dinheiro) / 10
 
 
-tools = [cotacao_dolar, calcular_divisor, traducao]
+tools = [cotaçao_moeda, calcular_divisor, traducao, vale_apena]
 
 llm = ChatOpenAI(temperature=0.1, model_name="gpt-4o")
 llm2 = ChatOpenAI(temperature=0.1, model_name="gpt-4o")
@@ -51,7 +65,7 @@ agent = initialize_agent(
     handle_parsing_errors=True
 )
 
-pergunta = "quero a cotaçao de 4 moedas pode ser qualquer uma"
+pergunta = "vale a pena compra dolar? e se ta caro quanto ta a mais ?"  
 resposta = agent.invoke(pergunta)
 print('------------------------------------------')
 # print(resposta)
