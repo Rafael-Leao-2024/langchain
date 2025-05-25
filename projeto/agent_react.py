@@ -80,9 +80,10 @@ prompt = PromptTemplate(template=template, input_variables=["input", "output"])
 
 chain = prompt | llm2 | StrOutputParser()
 
+entrada_chain = {'input': resposta.get('input'), 'output': resposta.get('output')}
 
 ckunks = []
-for chunk in chain.stream({'input': resposta.get('input'), 'output': resposta.get('output')}):
+for chunk in chain.stream(entrada_chain):
     ckunks.append(chunk)
     print(chunk, end="", flush=True)
 
